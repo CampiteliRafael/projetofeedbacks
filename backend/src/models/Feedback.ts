@@ -1,10 +1,18 @@
-import mongoose, { Schema } from "mongoose";
+// Exemplo de src/models/Feedback.ts
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
-const feedbackSchema = new Schema({
+export interface IFeedback extends Document {
+    name: string;
+    message: string;
+    userId: Types.ObjectId; // Campo para associar ao usuário
+    createdAt: Date;
+    // updatedAt: Date; // se precisar
+}
+
+const feedbackSchema = new Schema<IFeedback>({
     name: { type: String, required: true },
     message: { type: String, required: true },
-},
-    { timestamps: true }
-);
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Referência ao modelo User
+}, { timestamps: true }); // Adiciona createdAt e updatedAt automaticamente
 
-export default mongoose.model('Feedback', feedbackSchema);
+export default mongoose.model<IFeedback>('Feedback', feedbackSchema);

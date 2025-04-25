@@ -19,7 +19,7 @@ function App() {
                     <Route
                         path="/"
                         element={
-                            <ProtectedRoute>
+                            <ProtectedRoute requiredRole="user">
                                 <div>
                                     <FeedbackForm  onSent={handleSent}/>
                                 </div>
