@@ -71,3 +71,84 @@ export const deleteFeedback: RequestHandler = async (req: RequestWithUser, res: 
         res.status(500).json({ message: 'Erro interno ao deletar o feedback' });
     }
 };
+
+export const updateFeedbackStatus: RequestHandler = async (req: RequestWithUser, res: Response): Promise<void> => {
+    console.log(`\n--- Controller updateFeedbackStatus ---`); // <-- LOG AQUI
+    console.log(`Recebida requisição para ID: ${req.params.id} com Status: ${req.body.status}`);
+    const { id } = req.params; // Pega o ID do feedback da URL
+    const { status } = req.body; // Pega o novo status do corpo da requisição
+
+    // 1. Valida o ID
+    if (!isValidObjectId(id)) {
+        res.status(400).json({ message: 'ID de feedback inválido' });
+        return;
+    }
+
+    // 2. Valida o novo status recebido
+    const allowedStatuses = ['aprovado', 'rejeitado'];
+    if (!status || !allowedStatuses.includes(status)) {
+        res.status(400).json({ message: `Status inválido. Status permitidos: ${allowedStatuses.join(', ')}` });
+        return;
+    }
+
+    try {
+        // 3. Encontra e atualiza o feedback
+        const updatedFeedback = await Feedback.findByIdAndUpdate(
+            id, // ID do documento a ser atualizado
+            { status: status }, // Objeto com os campos a serem atualizados
+            { new: true, runValidators: true } // Opções: new=true retorna o doc atualizado, runValidators=true garante que o enum seja verificado
+        );
+
+        // 4. Verifica se o feedback foi encontrado
+        if (!updatedFeedback) {
+            res.status(404).json({ message: 'Feedback não encontrado' });
+            return;
+        }
+
+        // 5. Retorna o feedback atualizado
+        res.status(200).json(updatedFeedback);
+
+    } catch (error: any) {
+        console.error(`Erro ao atualizar status do feedback ${id} para ${status}:`, error);
+        res.status(500).json({ message: 'Erro interno ao atualizar status do feedback' });
+    }
+};
+
+// Função para buscar estatísticas (Admin)
+export const getFeedbackStats: RequestHandler = async (_req: RequestWithUser, res: Response): Promise<void> => {
+    console.log("BACKEND: getFeedbackStats - Controller INICIOU");
+    try {
+        const total = await Feedback.countDocuments();
+        const pending = await Feedback.countDocuments({ status: 'pendente' });
+        const approved = await Feedback.countDocuments({ status: 'aprovado' });
+        const rejected = await Feedback.countDocuments({ status: 'rejeitado' });
+
+        console.log("BACKEND: getFeedbackStats - Stats calculadas");
+        res.status(200).json({ total, pending, approved, rejected });
+         console.log("BACKEND: getFeedbackStats - Resposta enviada");
+    } catch (error: any) {
+        console.error("BACKEND: getFeedbackStats - ERRO no CATCH:", error);
+        res.status(500).json({ message: "Erro ao buscar estatísticas de feedback." });
+    }
+};
+
+// Função para buscar feedbacks do usuário logado (User)
+export const getMyFeedbacks: RequestHandler = async (req: RequestWithUser, res: Response): Promise<void> => {
+    console.log("BACKEND: getMyFeedbacks - Controller INICIOU");
+    if (!req.user || !req.user.id) {
+        console.log("BACKEND: getMyFeedbacks - Falha: Usuário não autenticado.");
+        res.status(401).json({ message: 'Usuário não autenticado corretamente.' });
+        return;
+    }
+    const userId = req.user.id;
+    console.log(`BACKEND: getMyFeedbacks - Buscando para userId: ${userId}`);
+    try {
+        const feedbacks = await Feedback.find({ userId: userId }).sort({ createdAt: -1 });
+        console.log("BACKEND: getMyFeedbacks - Feedbacks encontrados:", feedbacks?.length);
+        res.status(200).json(feedbacks);
+         console.log("BACKEND: getMyFeedbacks - Resposta enviada");
+    } catch (error: any) {
+        console.error(`BACKEND: getMyFeedbacks - ERRO no CATCH para userId ${userId}:`, error);
+        res.status(500).json({ message: "Erro ao buscar seus feedbacks." });
+    }
+};

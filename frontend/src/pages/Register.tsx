@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import InputField from '../components/common/InputField/InputField'; 
-import Button from '../components/common/button/Button';     
+import Button from '../components/common/button/Button';   
+import FormErrorMessage from '../components/common/FormErrorMessage/FormErrorMessage'; 
+import styles from './Register/Register.module.css'
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -48,7 +50,7 @@ const Register = () => {
     };
 
     return (
-        <div>
+        <div className={styles.register}>
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
                 <InputField
@@ -73,9 +75,7 @@ const Register = () => {
                 />
 
                  {error && (
-                     <div className='error'>
-                        <p>{error}</p>
-                     </div>
+                     <FormErrorMessage>{error}</FormErrorMessage>
                 )}
 
                 <Button
@@ -83,6 +83,7 @@ const Register = () => {
                     isLoading={isSubmitting}
                     disabled={isSubmitting}
                     loadingText="Registrando..."
+                    className={styles.button}
                 >
                     Registrar
                 </Button>

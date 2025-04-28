@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
-import InputField from '../components/common/InputField/InputField'
-import Button from '../components/common/button/Button';
+import InputField from '../../components/common/InputField/InputField'
+import Button from '../../components/common/button/Button';
+import FormErrorMessage from '../../components/common/FormErrorMessage/FormErrorMessage';
+import styles from '../Login/Login.module.css'
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -48,7 +50,7 @@ const Login = () => {
     };
 
     return (
-        <div>
+        <div className={styles.login}>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -76,18 +78,17 @@ const Login = () => {
                     />
                 </div>
                 {error && (
-                    <div className='error'>
-                        <p>{error}</p>
-                    </div>
+                    <FormErrorMessage>{error}</FormErrorMessage>
                 )}
 
                 <Button
                     type="submit"
-                    isLoading={isSubmitting} 
-                    disabled={isSubmitting} 
-                    loadingText="Entrando..." 
+                    isLoading={isSubmitting}
+                    disabled={isSubmitting}
+                    loadingText="Entrando..."
+                    className={styles.button}
                 >
-                    Login 
+                    Login
                 </Button>
             </form>
             <p>

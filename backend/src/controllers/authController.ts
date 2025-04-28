@@ -23,7 +23,7 @@ export const register: RequestHandler = async (req: Request, res: Response): Pro
         user = new User({ username, password });
         await user.save();
 
-        const payload = { user: { id: user.id, role: user.role } };
+        const payload = { user: { id: user.id, username: user.username, role: user.role } };
 
         jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' }, (err, token) => {
             if (err) {
@@ -44,6 +44,7 @@ export const register: RequestHandler = async (req: Request, res: Response): Pro
 
 export const login: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
         res.status(400).json({ errors: errors.array() });
         return;
@@ -53,6 +54,7 @@ export const login: RequestHandler = async (req: Request, res: Response): Promis
 
     try {
         const user = await User.findOne({ username });
+
         if (!user) {
             res.status(400).json({ message: 'Credenciais inválidas (usuário)' });
             return;
@@ -64,7 +66,8 @@ export const login: RequestHandler = async (req: Request, res: Response): Promis
             return;
         }
 
-        const payload = { user: { id: user.id, role: user.role } };
+        const payload = { user: { id: user.id, username: user.username, role: user.role } };
+        
         jwt.sign(payload, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' }, (err, token) => {
             if (err) {
                 console.error("Erro ao gerar token no login:", err);

@@ -1,0 +1,12 @@
+.feedbackForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 110, 255, 0.15);
+}
+
+.feedbackForm h2 {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}

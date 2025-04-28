@@ -1,0 +1,16 @@
+/* src/App.module.css */
+
+.appContainer {
+    max-width: 1200px; /* Largura máxima do conteúdo */
+    margin: 0 auto; /* Centraliza o container na tela */
+    padding: 0 1rem; /* Espaçamento lateral para não colar nas bordas */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Garante que o container ocupe pelo menos a altura da tela */
+  }
+  
+  .mainContent {
+    flex-grow: 1; /* Faz o conteúdo principal ocupar o espaço disponível (útil com Header/Footer) */
+    padding-top: 1.5rem; /* Espaço acima do conteúdo da rota */
+    padding-bottom: 1.5rem; /* Espaço abaixo do conteúdo da rota */
+  }

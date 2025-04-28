@@ -1,0 +1,121 @@
+/* src/components/FeedbackList.module.css */
+.feedbackListContainer {
+    padding: 1rem;
+    max-width: 900px; /* Limita largura da lista */
+    margin: 1rem auto; /* Centraliza */
+}
+
+.feedbackListContainer h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+}
+
+.feedbackList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feedbackItem {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap; /* Permite que botões quebrem linha em telas menores */
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.feedbackContent {
+    flex-grow: 1;
+    margin-right: 1rem; /* Espaço antes dos botões */
+    flex-basis: 60%; /* Ocupa mais espaço inicialmente */
+    min-width: 250px; /* Largura mínima para o conteúdo */
+}
+.feedbackContent p {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+.feedbackContent p:last-child {
+    margin-bottom: 0;
+}
+
+.feedbackDate {
+    font-size: 0.8em;
+    color: #777;
+    margin-top: 0.5rem;
+}
+
+.status {
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    font-size: 0.8em;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-left: 0.5em;
+    text-transform: capitalize;
+    vertical-align: middle; /* Alinha com o texto "Status:" */
+}
+
+.statuspendente {
+    background-color: #ffc107; /* Amarelo */
+    color: #333;
+}
+
+.statusaprovado {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+.statusrejeitado {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.feedbackActions {
+    display: flex;
+    flex-direction: column; /* Botões um abaixo do outro */
+    gap: 0.5rem; /* Espaço entre botões */
+    min-width: 110px; /* Largura mínima para os botões */
+    margin-top: 0.5rem; /* Espaço acima em telas pequenas */
+}
+
+/* Estilos para botões específicos - use !important se necessário para sobrescrever Button.module.css */
+.approveButton {
+    background-color: var(--cor-sucesso, #28a745) !important;
+}
+ .approveButton:hover:not(:disabled) {
+    background-color: #218838 !important;
+}
+
+.rejectButton {
+    background-color: var(--cor-erro, #dc3545) !important;
+}
+.rejectButton:hover:not(:disabled) {
+    background-color: #c82333 !important;
+}
+
+ .deleteButton {
+    background-color: #6c757d !important;
+ }
+  .deleteButton:hover:not(:disabled) {
+     background-color: #5a6268 !important;
+ }
+
+ /* Estilo para mensagens de loading/erro/vazio */
+ .message {
+   text-align: center;
+   padding: 2rem;
+   color: #555;
+   font-style: italic;
+ }
+ .error {
+   color: var(--cor-erro, #dc3545);
+   font-weight: bold;
+   font-style: normal;
+ }
