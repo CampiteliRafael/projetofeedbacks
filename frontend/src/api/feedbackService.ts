@@ -2,17 +2,18 @@ import { Feedback, FeedbackStatus } from "../types/Feedback";
 
 const API_URL = 'http://localhost:5000/api/feedbacks';
 
-const getAuthHeaders = (): HeadersInit => {
+const getAuthHeaders = (includeContentType: boolean = true): HeadersInit => {
+  
     const token = localStorage.getItem('token');
-    const headers: HeadersInit = { 
-        'Content-Type': 'application/json', 
-    };
+    const headers: HeadersInit = {};
+    if (includeContentType) { 
+       headers['Content-Type'] = 'application/json';
+    }
     if (token) {
-        headers['Authorization'] = `Bearer ${token}`; 
+        headers['Authorization'] = `Bearer ${token}`;
     }
     return headers;
 };
-
 export const getAllFeedbacks = async (): Promise<Feedback[]> => {
     const response = await fetch(API_URL, {
         method: 'GET', 
@@ -84,26 +85,16 @@ export const deleteFeedback = async (id: string): Promise<void> => {
 };
 
 export const updateFeedbackStatus = async (id: string, status: FeedbackStatus): Promise<Feedback> => {
-    // Verifica se o ID foi fornecido
     if (!id) {
          throw new Error('ID do feedback é necessário para atualizar o status.');
     }
-     // Verifica se o status é válido (opcional, backend também valida)
-    // const allowedStatuses: FeedbackStatus[] = ['aprovado', 'rejeitado'];
-    // if (!allowedStatuses.includes(status)) {
-    //      throw new Error(`Status inválido: ${status}`);
-    // }
 
-
-    console.log(`Chamando API para atualizar status: ID=<span class="math-inline">\{id\}, Status\=</span>{status}`); // Log para debug
-
-    const response = await fetch(`${API_URL}/${id}/status`, { // Chama o novo endpoint
-        method: 'PATCH', // Usa o método PATCH
-        headers: getAuthHeaders(), // Envia token de admin e Content-Type
-        body: JSON.stringify({ status: status }) // Envia o novo status no corpo
+    const response = await fetch(`${API_URL}/${id}/status`, { 
+        method: 'PATCH', 
+        headers: getAuthHeaders(), 
+        body: JSON.stringify({ status: status }) 
     });
 
-    // Tratamento de erro
     if (!response.ok) {
         let errorMsg = `Erro ao atualizar status para ${status}`;
         try {
@@ -116,6 +107,46 @@ export const updateFeedbackStatus = async (id: string, status: FeedbackStatus): 
         throw new Error(errorMsg);
     }
 
-    // Retorna o feedback atualizado enviado pelo backend
+    return response.json();
+};
+export interface FeedbackStats {
+    total: number;
+    pending: number;
+    approved: number;
+    rejected: number;
+}
+
+export const getFeedbackStats = async (): Promise<FeedbackStats> => {
+    const response = await fetch(`${API_URL}/stats`, {
+        method: 'GET',
+        headers: getAuthHeaders(false), 
+    });
+   
+    if (!response.ok) {
+         let errorMsg = 'Erro ao buscar estatísticas';
+         try {
+             const errorData = await response.json();
+             errorMsg = errorData.message || errorMsg;
+         } catch (e) { errorMsg = `Erro ${response.status}: ${response.statusText || errorMsg}`; }
+         console.error(`Erro ${response.status}: ${errorMsg}`);
+         throw new Error(errorMsg);
+    }
+    return response.json();
+};
+
+export const getMyFeedbacks = async (): Promise<Feedback[]> => {
+    const response = await fetch(`${API_URL}/my-feedbacks`, {
+        method: 'GET',
+        headers: getAuthHeaders(false), 
+    });
+    if (!response.ok) {
+         let errorMsg = 'Erro ao buscar seus feedbacks';
+         try {
+             const errorData = await response.json();
+             errorMsg = errorData.message || errorMsg;
+         } catch (e) { errorMsg = `Erro ${response.status}: ${response.statusText || errorMsg}`; }
+         console.error(`Erro ${response.status}: ${errorMsg}`);
+         throw new Error(errorMsg);
+    }
     return response.json();
 };

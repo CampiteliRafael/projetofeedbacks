@@ -1,10 +1,6 @@
-/* src/pages/Login/Login.module.css */
-/* (Ou qual for o caminho correto para seu arquivo) */
-
 .login {
-    /* Estilos para o container da página de login */
-    max-width: 450px; /* Define uma largura máxima para o formulário */
-    margin: 4rem auto; /* Centraliza na página com margem em cima/baixo */
+    max-width: 450px; 
+    margin: 4rem auto; 
     padding: 2rem 2.5rem;
     background-color: #ffffff;
     border-radius: 8px;
@@ -13,50 +9,41 @@
   }
   
   .login h2 {
-    /* Estilo para o título "Login" */
     text-align: center;
-    margin-bottom: 2rem; /* Mais espaço abaixo do título */
+    margin-bottom: 2rem; 
     color: #333;
     font-size: 1.8rem;
   }
   
   .login form {
-     /* Estilos para o formulário em si, se necessário */
      display: flex;
-     flex-direction: column; /* Organiza os inputs e botão em coluna */
+     flex-direction: column; 
   }
   
-  
-  /* --- ESTILOS PARA O BOTÃO *NESTA* PÁGINA --- */
-  .button { /* Define os estilos diretamente para a classe .button */
-    background-color: #0d6efd; /* Exemplo: Azul diferente do Button base */
+  .button { 
+    background-color: #0d6efd; 
     color: white;
-    font-weight: 600; /* Fonte um pouco mais forte */
-    padding: 12px 20px; /* Ajuste o padding se desejar */
-    margin-top: 1.5rem; /* Espaço acima do botão */
-    border: none; /* Garante que não há borda */
-    width: 100%; /* Faz o botão ocupar a largura do formulário */
-    transition: background-color 0.2s ease; /* Transição suave */
-    /* Adicione qualquer outro estilo que você queira AQUI */
-    /* Estes estilos terão prioridade ou complementarão os de Button.module.css */
+    font-weight: 600; 
+    padding: 12px 20px; 
+    margin-top: 1.5rem; 
+    border: none; 
+    width: 100%; 
+    transition: background-color 0.2s ease; 
   }
   
-  /* Efeito hover específico para o botão de login */
   .button:hover:not(:disabled) {
-     background-color: #0b5ed7; /* Azul um pouco mais escuro */
+     background-color: #0b5ed7; 
   }
   
-  /* Estilo para o parágrafo "Não tem conta?" */
   .login p {
       margin-top: 1.5rem;
       text-align: center;
       font-size: 0.9em;
       color: #555;
   }
-  
-  /* Estilo para o link dentro do parágrafo */
+
   .login p a {
-      color: var(--cor-primaria, #007bff); /* Usa variável CSS global se definida, senão fallback */
+      color: var(--cor-primaria, #007bff); 
       font-weight: 500;
       text-decoration: underline;
   }

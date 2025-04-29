@@ -1,81 +1,93 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Feedback, FeedbackStatus } from '../../../types/Feedback'; // Ajuste o caminho
-import { getAllFeedbacks, updateFeedbackStatus, deleteFeedback } from '../../../api/feedbackService'; // Ajuste o caminho
-import Button from '../button/Button'; // Ajuste o caminho
-import styles from './FeedbackList.module.css'; // Crie este arquivo CSS Module
+import { Feedback, FeedbackStatus } from '../../../types/Feedback';
+import { getAllFeedbacks, updateFeedbackStatus, deleteFeedback, getFeedbackStats, FeedbackStats } from '../../../api/feedbackService';
+import Button from '../button/Button';
+import styles from './FeedbackList.module.css'; 
 
 interface FeedbackListProps {
-    refreshTrigger: number; // Prop para forçar atualização (opcional)
+    refreshTrigger: number; 
 }
 
 const FeedbackList: React.FC<FeedbackListProps> = ({ refreshTrigger }) => {
-    console.log("FeedbackList: Componente RENDERIZOU!"); // Log inicial
+    console.log("FeedbackList: Componente RENDERIZOU!");
 
     const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [updatingId, setUpdatingId] = useState<string | null>(null); // ID do feedback sendo atualizado
-    const [deletingId, setDeletingId] = useState<string | null>(null); // ID do feedback sendo deletado
+    const [stats, setStats] = useState<FeedbackStats | null>(null);
+    const [isLoadingFeedbacks, setIsLoadingFeedbacks] = useState(true); 
+    const [isLoadingStats, setIsLoadingStats] = useState(true); 
+    const [error, setError] = useState<string | null>(null); 
+    const [updatingId, setUpdatingId] = useState<string | null>(null); 
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
-    // Função memoizada para buscar os feedbacks
+   
     const loadFeedbacks = useCallback(async () => {
-        console.log("FeedbackList: Buscando feedbacks...");
-        setIsLoading(true);
-        setError(null);
+        
         try {
-            const data = await getAllFeedbacks(); // Usa o nome correto da função
+            const data = await getAllFeedbacks();
             setFeedbacks(data);
-            console.log("FeedbackList: Feedbacks carregados:", data);
         } catch (err: any) {
             console.error("FeedbackList: Erro ao buscar feedbacks:", err);
             setError(err.message || 'Falha ao carregar feedbacks.');
         } finally {
-            setIsLoading(false);
+             setIsLoadingFeedbacks(false);
         }
-    }, []); // Sem dependências externas, só precisa ser definida uma vez
+    }, []); 
 
-    // Busca inicial e quando refreshTrigger mudar
+    const loadStats = useCallback(async () => {
+        try {
+            const data = await getFeedbackStats();
+            setStats(data);
+        } catch (err: any) {
+            console.error("FeedbackList: Erro ao buscar estatísticas:", err);
+            setError(err.message || 'Falha ao carregar estatísticas.');
+        } finally {
+             setIsLoadingStats(false);
+        }
+    }, []); 
+
     useEffect(() => {
-        loadFeedbacks();
-    }, [loadFeedbacks, refreshTrigger]); // Executa quando loadFeedbacks ou refreshTrigger mudam
+        console.log("FeedbackList: useEffect disparado, buscando tudo...");
+        setIsLoadingFeedbacks(true); 
+        setIsLoadingStats(true);
+        setError(null); 
 
-    // Handler para atualizar status (aprovar/rejeitar)
+        loadFeedbacks();
+        loadStats();
+
+    }, [loadFeedbacks, loadStats, refreshTrigger]); 
+
     const handleStatusUpdate = async (id: string, newStatus: FeedbackStatus) => {
-        if (!id || updatingId || deletingId) return; // Previne cliques múltiplos
+        if (!id || updatingId || deletingId) return; 
         setUpdatingId(id);
         setError(null);
         try {
             const updatedFeedback = await updateFeedbackStatus(id, newStatus);
-            // Atualiza a lista localmente
             setFeedbacks(currentFeedbacks =>
                 currentFeedbacks.map(fb =>
                     (fb.id === id || fb._id === id) ? { ...fb, status: updatedFeedback.status } : fb
                 )
             );
-             console.log(`Feedback ${id} atualizado para ${newStatus}`);
+            loadStats();
         } catch (err: any) {
             console.error(`FeedbackList: Erro ao atualizar status para ${newStatus}:`, err);
             setError(err.message || `Falha ao ${newStatus === 'aprovado' ? 'aprovar' : 'rejeitar'} feedback.`);
         } finally {
-            setUpdatingId(null);
+            setUpdatingId(null); // Libera o botão
         }
     };
 
-    // Handler para deletar
     const handleDelete = async (id: string) => {
-         if (!id || updatingId || deletingId) return; // Previne cliques múltiplos
-         // Confirmação visual
-         if (!window.confirm('Tem certeza que deseja deletar este feedback permanentemente?')) return;
+         if (!id || updatingId || deletingId) return;
 
          setDeletingId(id);
          setError(null);
          try {
              await deleteFeedback(id);
-             // Remove da lista localmente
              setFeedbacks(currentFeedbacks =>
                  currentFeedbacks.filter(fb => fb.id !== id && fb._id !== id)
              );
-             console.log(`Feedback ${id} deletado.`);
+            
+             loadStats();
          } catch (err: any) {
               console.error(`FeedbackList: Erro ao deletar feedback ${id}:`, err);
               setError(err.message || 'Falha ao deletar feedback.');
@@ -84,84 +96,100 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ refreshTrigger }) => {
          }
     };
 
-    // --- Renderização ---
-    if (isLoading) {
-        return <div className={styles.message}>Carregando feedbacks...</div>;
-    }
+    const isOverallLoading = isLoadingFeedbacks || isLoadingStats;
 
-    // Mostra erro geral (pode usar FormErrorMessage se preferir)
-    if (error) {
-        return <div className={`${styles.message} ${styles.error}`}>Erro: {error}</div>;
-    }
-
-    if (feedbacks.length === 0) {
-        return <div className={styles.message}>Nenhum feedback encontrado.</div>;
+    if (error && !isOverallLoading) {
+        return <div className={`${styles.message} ${styles.error}`}>Erro: {error} <Button onClick={() => {loadFeedbacks(); loadStats();}} style={{marginLeft: '1rem'}}>Tentar Novamente</Button></div>;
     }
 
     return (
         <div className={styles.feedbackListContainer}>
-            <h2>Lista de Feedbacks</h2>
-            <ul className={styles.feedbackList}>
-                {feedbacks.map((feedback) => {
-                    const currentId = feedback.id || feedback._id || ''; // Garante que temos um ID
-                    const isUpdating = updatingId === currentId;
-                    const isDeleting = deletingId === currentId;
-                    const isDisabled = isUpdating || isDeleting; // Desabilita todos os botões do item durante ação
+            <h2>Painel de Administração</h2>
 
-                    return (
-                        <li key={currentId} className={styles.feedbackItem}>
-                            <div className={styles.feedbackContent}>
-                                <p><strong>Nome:</strong> {feedback.name}</p>
-                                <p><strong>Mensagem:</strong> {feedback.message}</p>
-                                <p>
-                                    <strong>Status:</strong>
-                                    <span className={`${styles.status} ${styles[`status${feedback.status}`]}`}>
-                                        {feedback.status}
-                                    </span>
-                                </p>
-                                <p className={styles.feedbackDate}>
-                                    Recebido em: {new Date(feedback.createdAt).toLocaleString('pt-BR')}
-                                </p>
-                            </div>
-                            <div className={styles.feedbackActions}>
-                                {/* Mostra botões de Aprovar/Rejeitar apenas se status for 'pendente' */}
-                                {feedback.status === 'pendente' && (
-                                    <>
-                                        <Button
-                                            onClick={() => handleStatusUpdate(currentId, 'aprovado')}
-                                            disabled={isDisabled}
-                                            isLoading={isUpdating}
-                                            loadingText='Aprovando...'
-                                            className={styles.approveButton}
-                                        >
-                                            Aprovar
-                                        </Button>
-                                        <Button
-                                            onClick={() => handleStatusUpdate(currentId, 'rejeitado')}
-                                            disabled={isDisabled}
-                                            isLoading={isUpdating}
-                                            loadingText='Rejeitando...'
-                                            className={styles.rejectButton}
-                                        >
-                                            Rejeitar
-                                        </Button>
-                                    </>
-                                )}
-                                {/* Botão Deletar sempre visível para admin (ou poderia ser condicional também) */}
-                                <Button
-                                    onClick={() => handleDelete(currentId)}
-                                    disabled={isDisabled}
-                                    isLoading={isDeleting}
-                                    loadingText='Deletando...'
-                                    className={styles.deleteButton}
-                                >
-                                    Deletar
-                                </Button>
-                            </div>
-                        </li>
-                    );
-                 })}
-            </ul>
+            <div className={styles.statsContainer}>
+                <h3>Estatísticas</h3>
+                {isLoadingStats ? (
+                    <p className={styles.message}>Carregando estatísticas...</p>
+                ) : stats ? (
+                    <div className={styles.statsGrid}>
+                        <div>Total: <span>{stats.total}</span></div>
+                        <div className={styles.statPendente}>Pendente: <span>{stats.pending}</span></div>
+                        <div className={styles.statAprovado}>Aprovado: <span>{stats.approved}</span></div>
+                        <div className={styles.statRejeitado}>Rejeitado: <span>{stats.rejected}</span></div>
+                    </div>
+                ) : (
+            
+                    !error && <p className={styles.message}>Não foi possível carregar as estatísticas.</p>
+                )}
+            </div>
+
+            <h3>Lista de Feedbacks</h3>
+            {isLoadingFeedbacks ? (
+                <div className={styles.message}>Carregando feedbacks...</div>
+            ) : feedbacks.length === 0 ? (
+                <div className={styles.message}>Nenhum feedback encontrado.</div>
+            ) : (
+                <ul className={styles.feedbackList}>
+                    {feedbacks.map((feedback) => {
+                        const currentId = feedback.id || feedback._id || '';
+                        const isItemUpdating = updatingId === currentId;
+                        const isItemDeleting = deletingId === currentId;
+                        const isItemDisabled = isItemUpdating || isItemDeleting;
+
+                        return (
+                            <li key={currentId} className={`${styles.feedbackItem} ${isItemDisabled ? styles.itemDisabled : ''}`}>
+                                <div className={styles.feedbackContent}>
+                                   
+                                    <p><strong>Nome Enviado:</strong> {feedback.name}</p>
+                                    <p><strong>Mensagem:</strong> {feedback.message}</p>
+                                    <p>
+                                        <strong>Status:</strong>
+                                        <span className={`${styles.status} ${styles[`status${feedback.status}`]}`}>
+                                            {feedback.status}
+                                        </span>
+                                    </p>
+                                    <p className={styles.feedbackDate}>
+                                        Recebido em: {new Date(feedback.createdAt).toLocaleString('pt-BR')}
+                                    </p>
+                                </div>
+                                <div className={styles.feedbackActions}>
+                                    {feedback.status === 'pendente' && (
+                                        <>
+                                            <Button
+                                                onClick={() => handleStatusUpdate(currentId, 'aprovado')}
+                                                disabled={isItemDisabled} 
+                                                isLoading={isItemUpdating}
+                                                loadingText='Aprovando...'
+                                                className={styles.approveButton}
+                                            >
+                                                Aprovar
+                                            </Button>
+                                            <Button
+                                                onClick={() => handleStatusUpdate(currentId, 'rejeitado')}
+                                                disabled={isItemDisabled}
+                                                isLoading={isItemUpdating}
+                                                loadingText='Rejeitando...'
+                                                className={styles.rejectButton}
+                                            >
+                                                Rejeitar
+                                            </Button>
+                                        </>
+                                    )}
+                                    <Button
+                                        onClick={() => handleDelete(currentId)}
+                                        disabled={isItemDisabled}
+                                        isLoading={isItemDeleting}
+                                        loadingText='Deletando...'
+                                        className={styles.deleteButton}
+                                    >
+                                        Deletar
+                                    </Button>
+                                </div>
+                            </li>
+                        );
+                     })}
+                </ul>
+            )}
         </div>
     );
 };

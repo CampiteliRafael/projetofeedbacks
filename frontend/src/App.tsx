@@ -1,55 +1,71 @@
 // src/App.tsx
 import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import FeedbackForm from './components/common/FeedbackForm.tsx/FeedbackForm'; // Ajuste caminhos se necessário
-import FeedbackList from './components/common/FeedbackList/FeedbackList'; // Ajuste caminhos se necessário
-import Login from './pages/Login/Login';                   // Ajuste caminhos se necessário
-import Register from './pages/Register';             // Ajuste caminhos se necessário
-import ProtectedRoute from './components/ProtectedRoute'; // Ajuste caminhos se necessário
-// import Header from './components/layout/Header'; // Exemplo de Header (você precisaria criar)
-// import Footer from './components/layout/Footer'; // Exemplo de Footer (você precisaria criar)
-import styles from './App.module.css'; // 1. Importa o CSS Module do App
-import Header from './components/header/Header';
+import styles from './App.module.css';
+import Header from './components/header/Header'; // Ajuste o caminho
+// --- Imports das Páginas e Componentes ---
+import Login from './pages/Login/Login';                     // Ajuste o caminho
+import Register from './pages/Register';               // Ajuste o caminho
+import FeedbackForm from './components/common/FeedbackForm.tsx/FeedbackForm';    // Ajuste o caminho
+import FeedbackList from './components/common/FeedbackList/FeedbackList';    // Ajuste o caminho
+import MyFeedbacks from './pages/MyFeedbacks/MyFeedbacks';           // Ajuste o caminho
+import ProtectedRoute from './components/ProtectedRoute'; // Ajuste o caminho
+import RedirectIfLoggedIn from './components/common/RedirectIfLoggedIn/RedirectIfLoggedIn'; // <-- 1. Importe o novo wrapper
 
 function App() {
   const [refresh, setRefresh] = useState(0);
   const handleSent = () => setRefresh((r) => r + 1);
 
   return (
-    // 2. Aplica a classe do container geral
     <div className={styles.appContainer}>
-      {/* <Header /> */} {/* Renderiza o Header aqui, se tiver */}
       <Header />
-      {/* 3. Define uma área principal para o conteúdo da rota */}
       <main className={styles.mainContent}>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          {/* --- Rotas Públicas (Login / Registro) --- */}
           <Route
-            path="/"
+            path="/login"
+            element={
+              <RedirectIfLoggedIn>
+                <Login />
+              </RedirectIfLoggedIn>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <RedirectIfLoggedIn>
+                <Register />
+              </RedirectIfLoggedIn>
+            }
+          />
+
+          <Route
+            path="/" // Formulário de criação
             element={
               <ProtectedRoute requiredRole="user">
-                {/* O conteúdo específico da rota será estilizado
-                    pelo seu próprio componente/página e seu CSS Module */}
-                <div>
-                  <FeedbackForm onSent={handleSent} />
-                </div>
+                <div> <FeedbackForm onSent={handleSent}/> </div>
               </ProtectedRoute>
             }
           />
           <Route
-            path="/feedbacks"
+            path="/my-feedbacks" // Lista do usuário
             element={
-              <ProtectedRoute requiredRole="adm">
-                <FeedbackList refreshTrigger={refresh} />
+              <ProtectedRoute requiredRole='user'>
+                <MyFeedbacks />
               </ProtectedRoute>
             }
           />
-          {/* <Route path="*" element={<div>Página Não Encontrada</div>} /> */}
+          <Route
+            path="/feedbacks" // Painel do Admin
+            element={
+              <ProtectedRoute requiredRole="adm">
+                <FeedbackList refreshTrigger={refresh}/>
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
-
-      {/* <Footer /> */} {/* Renderiza o Footer aqui, se tiver */}
+      {/* <Footer /> */}
     </div>
   );
 }

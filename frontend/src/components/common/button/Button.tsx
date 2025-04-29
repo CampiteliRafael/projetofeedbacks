@@ -1,6 +1,5 @@
 import React from 'react';
-import styles from './Button.module.css'; // <-- Importa o CSS Module
-
+import styles from './Button.module.css'; 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isLoading?: boolean;
     loadingText?: string;
@@ -12,14 +11,12 @@ const Button: React.FC<ButtonProps> = ({
     isLoading = false,
     loadingText = 'Carregando...',
     disabled = false,
-    className, // <-- Recebe className externo se houver
+    className, 
     type = 'button',
     ...rest
 }) => {
     const isDisabled = disabled || isLoading;
 
-    // Combina a classe base com a classe de desabilitado se necessário
-    // E permite adicionar classes externas passadas via props
     const buttonClasses = `
         ${styles.button}
         ${isDisabled ? styles.buttonDisabled : ''}
@@ -30,8 +27,7 @@ const Button: React.FC<ButtonProps> = ({
         <button
             type={type}
             disabled={isDisabled}
-            // Remove o style inline, usa className
-            className={buttonClasses.trim()} // trim() para remover espaços extras
+            className={buttonClasses.trim()} 
             {...rest}
         >
             {isLoading ? loadingText : children}

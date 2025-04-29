@@ -20,7 +20,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     }
 
     if (requiredRole && user.role !== requiredRole) {
-        console.warn(`ProtectedRoute (${location.pathname}): Usuário com role "${user.role}" não autorizado para role "${requiredRole}". Redirecionando.`); // Log opcional
         return <Navigate to="/" replace />; 
     }
 

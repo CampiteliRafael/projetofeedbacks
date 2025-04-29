@@ -1,0 +1,93 @@
+.myFeedbacksContainer {
+    max-width: 800px; 
+    margin: 2rem auto; 
+    padding: 1.5rem 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee;
+  }
+  
+  .myFeedbacksContainer h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+    font-size: 1.7rem;
+  }
+  
+  .feedbackList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .feedbackItem {
+    border: 1px solid #e8e8e8; 
+    border-radius: 6px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    background-color: #fdfdfd; 
+  }
+  
+  .feedbackItem p {
+    margin-bottom: 0.6rem;
+    line-height: 1.5;
+    word-break: break-word;
+    color: #444; 
+  }
+  .feedbackItem p:last-child {
+    margin-bottom: 0;
+  }
+  .feedbackItem p strong {
+    color: #333; 
+  }
+  
+  .feedbackDate {
+    font-size: 0.8em;
+    color: #777;
+    margin-top: 0.8rem; 
+    text-align: right; 
+  }
+  
+  .status {
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    font-size: 0.8em;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-left: 0.5em;
+    text-transform: capitalize;
+    vertical-align: middle;
+  }
+  
+  .statuspendente {
+    background-color: #ffc107; 
+    color: #333;
+  }
+  
+  .statusaprovado {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .statusrejeitado {
+    background-color: #dc3545; 
+    color: white;
+  }
+  
+  .message {
+    text-align: center;
+    padding: 2rem;
+    color: #555;
+    font-style: italic;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-top: 1rem;
+  }
+  .error {
+    color: var(--cor-erro, #dc3545);
+    font-weight: bold;
+    font-style: normal;
+    border: 1px solid var(--cor-erro, #dc3545);
+    background-color: #f8d7da;
+  }

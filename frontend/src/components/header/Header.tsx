@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Ajuste o caminho se necessário
-import Button from '../common/button/Button'; // Ajuste o caminho se necessário
+import { useAuth } from '../../context/AuthContext';
+import Button from '../common/button/Button';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
@@ -10,33 +10,30 @@ const Header: React.FC = () => {
     return (
         <header className={styles.header}>
             <div className={styles.container}>
-                {/* Logo/Link para Home */}
                 <Link to={user ? (user.role === 'adm' ? '/feedbacks' : '/') : '/login'} className={styles.logo}>
                     FeedbackApp
                 </Link>
 
                 <nav className={styles.nav}>
                     {user ? (
-                        // --- Usuário Logado ---
+                    
                         <div className={styles.loggedInNav}>
                             <span className={styles.welcomeMessage}>
                                 Olá, {user.username}!
                             </span>
 
-                            {/* ***** LINKS CONDICIONAIS POR ROLE ***** */}
                             {user.role === 'adm' && (
-                                <Link to="/feedbacks" className={styles.navLink}>
-                                    Listar Feedbacks {/* Opção para Admin */}
-                                </Link>
+                                <Link to="/feedbacks" className={styles.navLink}>Painel Admin</Link>
                             )}
                             {user.role === 'user' && (
-                                <Link to="/" className={styles.navLink}>
-                                    Criar Feedback {/* Opção para User */}
-                                </Link>
+                                <>
+                                  
+                                    <Link to="/my-feedbacks" className={styles.navLink}>Meus Feedbacks</Link>
+                                   
+                                    <Link to="/" className={styles.navLink}>Criar Feedback</Link>
+                                </>
                             )}
-                            {/* *************************************** */}
 
-                            {/* Botão de Logout */}
                             <Button
                                 onClick={logout}
                                 className={styles.logoutButton}
@@ -45,7 +42,6 @@ const Header: React.FC = () => {
                             </Button>
                         </div>
                     ) : (
-                        // --- Usuário Deslogado ---
                         <div className={styles.loggedOutNav}>
                             <Link to="/login" className={styles.navLink}>
                                 Login

@@ -1,29 +1,17 @@
-/* src/components/layout/Header/Header.module.css */
-
 .header {
   background-color: #ffffff;
-  /* Fundo branco */
   padding: 0.8rem 0;
-  /* Padding vertical, sem padding horizontal aqui */
   border-bottom: 1px solid #e0e0e0;
-  /* Linha sutil abaixo */
   box-shadow: 0 4px 15px rgba(0, 110, 255, 0.15);
 }
 
-/* Container para centralizar o conteúdo do header */
 .container {
   max-width: 1100px;
-  /* Mesma largura do .appContainer em App.module.css (ou ajuste) */
   margin: 0 auto;
-  /* Centraliza */
   padding: 0 1rem;
-  /* Padding lateral (igual ao .appContainer) */
   display: flex;
-  /* Usa flexbox para alinhar itens */
   justify-content: space-between;
-  /* Espaça o logo e a navegação */
   align-items: center;
-  /* Alinha verticalmente */
 }
 
 .logo {
@@ -33,18 +21,11 @@
   text-decoration: none;
 }
 
-.nav {
-  /* O container da navegação em si */
-}
-
 .loggedInNav,
 .loggedOutNav {
   display: flex;
-  /* Alinha itens da navegação lado a lado */
   align-items: center;
-  /* Alinha verticalmente */
   gap: 1rem;
-  /* Espaço entre os itens da navegação */
 }
 
 .welcomeMessage {
@@ -53,26 +34,21 @@
 }
 
 .logoutButton {
-  /* Exemplo: Deixar um pouco menor que botões normais */
   padding: 6px 12px;
   font-size: 0.9rem;
   background-color:  #dc3545;
   font-weight: 600;
 }
 
-/* Hover específico para logout */
 .logoutButton:hover:not(:disabled) {
   background-color:  rgb(180, 73, 73);
 }
 
-
-/* Estilo para os links de Login/Register */
 .navLink {
   color: var(--cor-primaria, #007bff);
   text-decoration: none;
   font-weight: 500;
   padding: 0.3rem 0;
-  /* Pequeno padding para área de clique */
 }
 
 .navLink:hover {
