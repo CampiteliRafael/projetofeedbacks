@@ -6,7 +6,7 @@
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
     "create-admin": "node dist/scripts/create-admin.js",
-    "test": "jest", 
+    "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage"
   },

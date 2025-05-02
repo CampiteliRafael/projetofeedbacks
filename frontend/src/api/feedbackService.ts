@@ -1,4 +1,4 @@
-import { Feedback, FeedbackStatus } from "../types/Feedback"; 
+import { Feedback, FeedbackStatus, FeedbackStats } from "../types/Feedback"; 
 
 const API_URL = 'http://localhost:5000/api/feedbacks';
 
@@ -109,12 +109,6 @@ export const updateFeedbackStatus = async (id: string, status: FeedbackStatus): 
 
     return response.json();
 };
-export interface FeedbackStats {
-    total: number;
-    pending: number;
-    approved: number;
-    rejected: number;
-}
 
 export const getFeedbackStats = async (): Promise<FeedbackStats> => {
     const response = await fetch(`${API_URL}/stats`, {

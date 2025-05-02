@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './FormErrorMessage.module.css'; 
 
 interface FormErrorMessageProps {
-  children: React.ReactNode; 
+  children?: React.ReactNode; 
   className?: string;
 }
 

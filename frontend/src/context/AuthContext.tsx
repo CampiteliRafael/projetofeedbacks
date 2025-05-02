@@ -10,14 +10,14 @@ interface DecodedTokenPayload {
     iat?: number;
     exp?: number;
 }
-interface AuthContextData {
+export interface AuthContextData {
     user: { id: string; username: string; role: string } | null;
     isLoading: boolean; 
     login: (token: string) => void;
     logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextData>({
+export const AuthContext = createContext<AuthContextData>({
     user: null,
     isLoading: true,
     login: () => {},

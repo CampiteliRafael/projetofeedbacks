@@ -9,3 +9,10 @@ export interface Feedback {
     updatedAt?: string | Date;
     status: FeedbackStatus;
 }
+
+export interface FeedbackStats {
+    total: number;
+    pending: number;
+    approved: number;
+    rejected: number;
+}

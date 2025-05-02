@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Feedback, FeedbackStatus } from '../../../types/Feedback';
-import { getAllFeedbacks, updateFeedbackStatus, deleteFeedback, getFeedbackStats, FeedbackStats } from '../../../api/feedbackService';
-import Button from '../button/Button';
+import { Feedback, FeedbackStatus } from '../../types/Feedback';
+import { getAllFeedbacks, updateFeedbackStatus, deleteFeedback, getFeedbackStats } from '../../api/feedbackService';
+import { FeedbackStats } from '../../types/Feedback';
+import Button from '../common/button/Button';
 import styles from './FeedbackList.module.css'; 
 
 interface FeedbackListProps {

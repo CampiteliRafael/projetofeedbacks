@@ -23,7 +23,8 @@ export const createFeedback = async (req: RequestWithUser, res: Response) => {
     }
 
     if (req.user.role === 'adm') {
-        return res.status(403).json({ message: 'Administradores não podem criar feedbacks por esta rota.' });
+        res.status(403).json({ message: 'Administradores não podem criar feedbacks por esta rota.' });
+        return;
     }
 
     const userId = req.user.id;

@@ -5,11 +5,11 @@ import styles from './App.module.css';
 import Header from './components/header/Header'; // Ajuste o caminho
 // --- Imports das Páginas e Componentes ---
 import Login from './pages/Login/Login';                     // Ajuste o caminho
-import Register from './pages/Register';               // Ajuste o caminho
-import FeedbackForm from './components/common/FeedbackForm.tsx/FeedbackForm';    // Ajuste o caminho
-import FeedbackList from './components/common/FeedbackList/FeedbackList';    // Ajuste o caminho
-import MyFeedbacks from './pages/MyFeedbacks/MyFeedbacks';           // Ajuste o caminho
-import ProtectedRoute from './components/ProtectedRoute'; // Ajuste o caminho
+import Register from './pages/Register/Register';               // Ajuste o caminho
+import FeedbackForm from './components/FeedbackForm.tsx/FeedbackForm';    // Ajuste o caminho
+import FeedbackList from './components/FeedbackList/FeedbackList';    // Ajuste o caminho
+import MyFeedbacks from './components/MyFeedbacks/MyFeedbacks';           // Ajuste o caminho
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'; // Ajuste o caminho
 import RedirectIfLoggedIn from './components/common/RedirectIfLoggedIn/RedirectIfLoggedIn'; // <-- 1. Importe o novo wrapper
 
 function App() {

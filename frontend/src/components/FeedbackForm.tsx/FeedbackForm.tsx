@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import InputField from '../InputField/InputField';
-import Button from '../button/Button';
-import FormErrorMessage from '../FormErrorMessage/FormErrorMessage'; 
-import { sendFeedback } from '../../../api/feedbackService';
-import { useAuth } from '../../../context/AuthContext';
+import InputField from '../common/InputField/InputField';
+import Button from '../common/button/Button';
+import FormErrorMessage from '../common/FormErrorMessage/FormErrorMessage'; 
+import { sendFeedback } from '../../api/feedbackService';
+import { useAuth } from '../../context/AuthContext';
 import styles from './FeedbackForm.module.css';
 interface Props {
     onSent: () => void;

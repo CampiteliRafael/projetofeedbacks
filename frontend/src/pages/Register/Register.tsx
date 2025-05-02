@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import InputField from '../components/common/InputField/InputField'; 
-import Button from '../components/common/button/Button';   
-import FormErrorMessage from '../components/common/FormErrorMessage/FormErrorMessage'; 
-import styles from './Register/Register.module.css'
+import InputField from '../../components/common/InputField/InputField'; 
+import Button from '../../components/common/button/Button';   
+import FormErrorMessage from '../../components/common/FormErrorMessage/FormErrorMessage'; 
+import styles from './Register.module.css'
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -30,10 +30,7 @@ const Register = () => {
             const data = await response.json().catch(() => ({ message: `Erro ${response.status}: ${response.statusText}` }));
 
             if (response.ok) {
-
-                 alert('Registro bem-sucedido! Faça login agora.'); // Manter alert aqui ou substituir por mensagem inline
                  navigate('/login'); 
-
             } else {
                 setError(data.message || `Erro ${response.status} ao registrar`);
             }
