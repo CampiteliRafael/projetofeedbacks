@@ -116,7 +116,7 @@ Este projeto demonstra a implementação de autenticação segura com JWT, autor
 
 1.  **Clonar o Repositório:**
     ```bash
-    git clone [https://docs.github.com/articles/referencing-and-citing-content](https://docs.github.com/articles/referencing-and-citing-content)
+    git clone [(https://github.com/CampiteliRafael/projetofeedbacks.git)]
     cd nome-da-pasta-do-projeto
     ```
 
